@@ -1,3 +1,40 @@
+<script setup>
+import { RouterLink } from "vue-router";
+import { ref, onMounted, onUnmounted } from "vue";
+
+const userAgent = navigator.userAgent;
+const isOnline = ref(navigator.onLine);
+const isPopupVisible = ref(false);
+
+const updateStatus = () => {
+  isOnline.value = navigator.onLine;
+};
+
+const togglePopup = (event) => {
+  event.stopPropagation(); // Mencegah event bubble
+  isPopupVisible.value = !isPopupVisible.value; // Toggle status popup
+};
+
+const closePopup = (event) => {
+  const popup = document.querySelector(".popUp");
+  if (popup && !popup.contains(event.target) && isPopupVisible.value) {
+    isPopupVisible.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("online", updateStatus);
+  window.addEventListener("offline", updateStatus);
+  document.addEventListener("mousedown", closePopup);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("online", updateStatus);
+  window.removeEventListener("offline", updateStatus);
+  document.removeEventListener("mousedown", closePopup);
+});
+</script>
+
 <template>
   <nav class="navbar">
     <div class="container">
@@ -32,7 +69,7 @@
           </svg>
         </button>
         <button @click="logout" class="button btn-logout">
-          <p>Logout</p>
+          <p class="label-logout">Logout</p>
           <svg
             width="25"
             height="26"
@@ -63,33 +100,10 @@
   </nav>
 </template>
 
-<script setup>
-import { RouterLink } from "vue-router";
-import { ref, onMounted, onUnmounted } from "vue";
-
-const userAgent = navigator.userAgent;
-const isOnline = ref(navigator.onLine);
-const isPopupVisible = ref(false);
-
-const updateStatus = () => {
-  isOnline.value = navigator.onLine;
-};
-const togglePopup = () => {
-  isPopupVisible.value = !isPopupVisible.value;
-};
-
-onMounted(() => {
-  window.addEventListener("online", updateStatus);
-  window.addEventListener("offline", updateStatus);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("online", updateStatus);
-  window.removeEventListener("offline", updateStatus);
-});
-</script>
-
 <style scoped>
+.label-logout {
+  display: none;
+}
 .navbar {
   position: fixed;
   top: 0;
@@ -106,7 +120,7 @@ onUnmounted(() => {
   position: relative;
   align-items: center;
   width: 100%;
-  padding: 0 4rem;
+  padding: 0 2rem;
 }
 .logo-nav {
   height: 30px;
@@ -121,6 +135,7 @@ svg {
   gap: 0.6rem;
   align-items: center;
 }
+
 .button {
   padding: 1rem;
 }
@@ -157,5 +172,10 @@ svg {
 }
 .btn-logout p {
   color: #ffffff;
+}
+@media (min-width: 992px) {
+  .label-logout {
+    display: block;
+  }
 }
 </style>

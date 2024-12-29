@@ -80,7 +80,7 @@ const handleAnswerChange = (questionId, selectedOption) => {
 </script>
 
 <template>
-  <div v-if="result.test_name">
+  <div v-if="result.test_name" class="container-quiz">
     <QuestionItem
       :result="result"
       :step="step"
@@ -103,18 +103,12 @@ const handleAnswerChange = (questionId, selectedOption) => {
 .btn-group {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 .button-prev {
   background-color: rgb(108, 108, 108);
 }
 .button-prev:hover {
   background-color: rgb(41, 41, 41);
-}
-.button-submit {
-  background-color: rgb(40, 167, 69);
-}
-.button-submit:hover {
-  background-color: rgb(28, 118, 51);
 }
 </style>

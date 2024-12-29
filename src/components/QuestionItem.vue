@@ -55,24 +55,29 @@ const submitAnswers = () => {
         <h4 class="question-number">Pertanyaan #{{ res.question_id }}</h4>
         <h5 class="question-timer">Sisa Waktu: {{ timer }}</h5>
       </div>
-
       <h2 class="question-text">{{ res.question_text }}</h2>
-      <div v-for="(op, index) in res.options" :key="index" class="input-group">
-        <input
-          class="radio-input"
-          type="radio"
-          :name="'question-' + res.question_id"
-          :id="'option-' + res.question_id + '-' + index"
-          :value="op"
-          v-model="selectedOption"
-          @change="handleOptionChange(res.question_id, op)"
-        />
-        <label
-          class="radio-label"
-          :for="'option-' + res.question_id + '-' + index"
+      <div class="wrap-options">
+        <div
+          v-for="(op, index) in res.options"
+          :key="index"
+          class="input-group"
         >
-          {{ op }}
-        </label>
+          <input
+            class="radio-input"
+            type="radio"
+            :name="'question-' + res.question_id"
+            :id="'option-' + res.question_id + '-' + index"
+            :value="op"
+            v-model="selectedOption"
+            @change="handleOptionChange(res.question_id, op)"
+          />
+          <label
+            class="radio-label"
+            :for="'option-' + res.question_id + '-' + index"
+          >
+            {{ op }}
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -80,10 +85,11 @@ const submitAnswers = () => {
 
 <style scoped>
 .question-container {
-  width: 600px;
+  margin-top: 2rem;
+  padding-top: 2rem;
 }
 .question-number {
-  font-size: 30px;
+  font-size: 24px;
   color: #222222;
   margin-bottom: 2rem;
 }
@@ -94,18 +100,22 @@ const submitAnswers = () => {
   font-size: 32px;
   margin-bottom: 1.5rem;
 }
-.input-group {
-  padding: 0.5rem 0rem;
-}
 
 .wrap {
   display: flex;
   justify-content: space-between;
 }
+.wrap-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.input-group {
+  width: 50%;
+}
 .radio-input {
   display: none;
 }
-
 .radio-label {
   font-weight: 600;
   display: inline-block;
@@ -123,5 +133,11 @@ const submitAnswers = () => {
   background-color: #222222;
   color: #ffffff;
   border-color: #222222;
+}
+@media (min-width: 992px) {
+  .question-container {
+    margin-top: 1rem;
+    width: 600px;
+  }
 }
 </style>
