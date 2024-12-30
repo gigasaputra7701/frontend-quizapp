@@ -7,7 +7,6 @@ import { useToast } from "vue-toastification";
 const toast = useToast();
 const router = useRouter();
 
-// State untuk form input
 const formData = ref({
   email: "",
   username: "",
@@ -25,23 +24,28 @@ const handleRegister = async () => {
     ) {
       return toast.error("Semua Field harus diisi!");
     }
-
     if (formData.value.password !== formData.value.password2) {
       return toast.error("Password tidak sama!");
     }
 
-    const response = await axios.post("http://localhost:3000/register", {
+    const response = await axios.post("http://localhost:8000/register", {
       user: {
         email: formData.value.email,
         username: formData.value.username,
+        password: formData.value.password,
       },
     });
 
     if (response.status === 200) {
-      router.push("/result");
+      await router.push("/login");
+      toast.success("Berhasil mendaftarkan akun!");
+    } else {
+      throw new Error();
     }
   } catch (error) {
-    return toast.error("Gagal mendaftarkan akun, coba lagi");
+    return toast.error(
+      error.response?.data?.message || "Gagal mendaftarkan akun!"
+    );
   }
 };
 </script>
@@ -121,20 +125,15 @@ const handleRegister = async () => {
       </div>
       <div class="input-group">
         <label for="email">Email</label>
-        <input type="email" id="email" v-model="formData.email" required />
+        <input type="email" id="email" v-model="formData.email" />
       </div>
       <div class="input-group">
         <label for="username">Username</label>
-        <input type="text" id="username" v-model="formData.username" required />
+        <input type="text" id="username" v-model="formData.username" />
       </div>
       <div class="input-group">
         <label for="password">Password</label>
-        <input
-          type="password"
-          v-model="formData.password"
-          id="password"
-          required
-        />
+        <input type="password" v-model="formData.password" id="password" />
       </div>
       <div class="input-group">
         <label for="password2">Konfirmasi Password</label>

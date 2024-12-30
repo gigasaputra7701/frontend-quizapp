@@ -1,6 +1,52 @@
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+const router = useRouter();
+
+const formData = ref({
+  email: "",
+  password: "",
+});
+
+const handleLogin = async () => {
+  try {
+    if (!formData.value.email || !formData.value.password) {
+      return toast.error("Semua Field harus diisi!");
+    }
+
+    const response = await axios.post("http://localhost:8000/login", {
+      user: {
+        email: formData.value.email,
+        password: formData.value.password,
+      },
+    });
+
+    if (response.status === 200) {
+      const token = response.data.token;
+      const role = response.data.role;
+      localStorage.setItem("token", token);
+
+      if (role === "participant") {
+        await router.push("/");
+      } else {
+        await router.push("/admin/home");
+      }
+
+      toast.success("Berhasil Login!");
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
+    return toast.error(error.response?.data?.message || "Gagal Login!");
+  }
+};
+</script>
 <template>
-  <form action="" method="POST" class="form">
+  <form action="" method="POST" class="form" @submit.prevent="handleLogin">
     <div class="header-container">
       <img class="header-image" src="../assets/img/logo-header.png" alt="" />
 
@@ -74,10 +120,12 @@
         </p>
       </div>
       <div class="input-group">
-        <label for="">Email</label> <input type="email" name="email" />
+        <label for="">Email</label>
+        <input type="email" name="email" v-model="formData.email" />
       </div>
       <div class="input-group">
-        <label for="">Password</label> <input type="password" name="password" />
+        <label for="">Password</label>
+        <input type="password" name="password" v-model="formData.password" />
       </div>
       <button class="button" type="submit">Masuk</button>
     </div>
