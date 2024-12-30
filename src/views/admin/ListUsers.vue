@@ -1,20 +1,31 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { useUserStore } from "@/stores/userStore";
+
+const userStore = useUserStore();
 
 const users = ref([]);
 
 onMounted(async () => {
-  try {
-    const response = await axios.get("http://localhost:8000/users", {
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-    });
-    users.value = response.data.users;
-    console.log(response.data);
-  } catch (error) {
-    console.error("Error fetching users:", error);
+  await userStore.fetchUserData();
+
+  if (
+    userData.value.role === "recruiter" ||
+    userData.value.role === "proctor" ||
+    userData.value.role === "manager"
+  ) {
+    try {
+      const response = await axios.get("http://localhost:8000/users", {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      users.value = response.data.users;
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   }
 });
 </script>

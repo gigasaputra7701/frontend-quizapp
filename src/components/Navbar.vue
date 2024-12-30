@@ -28,9 +28,9 @@ const logout = async () => {
 onMounted(async () => {
   window.addEventListener("online", updateStatus);
   window.addEventListener("offline", updateStatus);
-  if (!isLoggedIn.value) {
-    await router.push("/login");
-  }
+  // if (!isLoggedIn.value) {
+  //   await router.push("/login");
+  // }
 });
 
 onUnmounted(() => {

@@ -1,5 +1,12 @@
 <script setup>
+import { onMounted } from "vue";
 import { RouterLink } from "vue-router";
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
+
+onMounted(() => {
+  userStore.fetchUserData();
+});
 </script>
 
 <template>

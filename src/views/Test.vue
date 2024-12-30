@@ -24,6 +24,8 @@ watch(step, (newStep) => {
 });
 
 onMounted(async () => {
+  await userStore.fetchUserData();
+
   try {
     const response = await axios.get("http://localhost:8000/api/test");
     const data = response.data.test[0];
