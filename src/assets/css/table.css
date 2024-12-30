@@ -1,0 +1,28 @@
+h2 {
+  font-size: 32px;
+  text-align: center;
+  color: #222222;
+}
+p {
+  color: #222222;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+th {
+  background-color: #f4f4f4;
+}
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.container {
+  margin-top: 3rem;
+}
