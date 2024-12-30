@@ -22,7 +22,6 @@ onMounted(async () => {
         },
       });
       tests.value = response.data.test;
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching tests:", error);
     }

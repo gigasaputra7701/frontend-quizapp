@@ -22,7 +22,6 @@ onMounted(async () => {
         },
       });
       users.value = response.data.users;
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }

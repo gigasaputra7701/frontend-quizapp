@@ -21,7 +21,6 @@ onMounted(async () => {
           Authorization: localStorage.getItem("token"),
         },
       });
-      results.value = response.data.dataResult;
     } catch (error) {
       console.error("Error fetching results:", error);
     }
