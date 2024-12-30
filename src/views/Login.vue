@@ -33,7 +33,7 @@ const handleLogin = async () => {
       if (role === "participant") {
         await router.push("/");
       } else {
-        await router.push("/admin/home");
+        await router.push("/admin");
       }
 
       toast.success("Berhasil Login!");

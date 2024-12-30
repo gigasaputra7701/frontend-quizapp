@@ -42,7 +42,7 @@ const router = createRouter({
       component: Register,
     },
     {
-      path: "/admin/home",
+      path: "/admin",
       name: "AdminHome",
       component: AdminHome,
       meta: { requiresAuth: true, roles: ["proctor", "recruiter", "manager"] },

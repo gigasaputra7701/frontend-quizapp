@@ -45,7 +45,7 @@ onUnmounted(() => {
       <router-link
         v-if="isLoggedIn && userData.role != 'participant'"
         class="Hello button"
-        to="/admin/home"
+        to="/admin/"
       >
         Hi, {{ userData.role }}
       </router-link>

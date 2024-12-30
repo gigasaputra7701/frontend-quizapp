@@ -1,10 +1,10 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
-
+const userData = computed(() => userStore.userData);
 const users = ref([]);
 
 onMounted(async () => {
