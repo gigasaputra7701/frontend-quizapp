@@ -6,6 +6,7 @@
 
 <style scoped>
 .footer {
+  margin-top: 3rem;
   width: 100wv;
   height: 40px;
   display: flex;
