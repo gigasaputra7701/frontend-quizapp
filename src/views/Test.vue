@@ -1,18 +1,23 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
+import { useUserStore } from "@/stores/userStore";
+
 import isLoading from "@/components/isLoading.vue";
 import QuestionItem from "@/components/QuestionItem.vue";
 
-const result = ref({});
+const router = useRouter();
+const toast = useToast();
+const userStore = useUserStore();
+
 const step = ref(1);
 const totalStep = ref(0);
 const isDisable = ref(false);
 const selectedAnswers = ref({});
-const router = useRouter();
-const toast = useToast();
+const result = ref({});
+const userData = computed(() => userStore.userData);
 
 watch(step, (newStep) => {
   isDisable.value = newStep <= 1;
@@ -20,7 +25,7 @@ watch(step, (newStep) => {
 
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/test");
+    const response = await axios.get("http://localhost:8000/api/test");
     const data = response.data.test[0];
     result.value = { ...data };
     totalStep.value = data.questions.length;
@@ -54,23 +59,28 @@ const calculateScore = () => {
 };
 
 const submitTest = async () => {
-  const testResult = {
-    user_id: "676ee0d79f54b164801e011d", //manual
-    test_id: result.value._id,
-    score: calculateScore(),
-    answers: selectedAnswers.value,
-    completed_at: new Date(),
-  };
-
   try {
+    const testResult = {
+      user_id: userData.value._id,
+      test_id: result.value._id,
+      score: calculateScore(),
+      answers: selectedAnswers.value,
+      completed_at: new Date(),
+    };
+    console.log(testResult);
+
     const response = await axios.post(
-      "http://localhost:3000/api/result",
+      "http://localhost:8000/api/result",
       testResult
     );
-    toast.success("Success submitted!");
-    router.push("/result");
+    if (response.status === 200) {
+      toast.success("Success submitted!");
+      await router.push("/result");
+    } else {
+      throw new Error();
+    }
   } catch (error) {
-    console.error("Error submitting test:", error);
+    console.error("G", error);
   }
 };
 
@@ -92,7 +102,7 @@ const handleAnswerChange = (questionId, selectedOption) => {
         Kembali
       </button>
       <button class="button" @click="handleNextClick">
-        Selanjutnya
+        {{ step < totalStep ? "Selanjutnya" : "Submit" }}
       </button>
     </div>
   </div>

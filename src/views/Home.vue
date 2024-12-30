@@ -1,25 +1,24 @@
 <script setup>
-import axios from "axios";
 import { RouterLink } from "vue-router";
-import { ref, onMounted } from "vue";
-import isLoading from "../components/isLoading.vue";
-const dataTest = ref({});
+import { onMounted } from "vue";
+import { useUserStore } from "@/stores/userStore";
+const userStore = useUserStore();
 
-onMounted(async () => {
-  try {
-    const response = await axios.get("http://localhost:3000");
-    dataTest.value = response.data.result;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+onMounted(() => {
+  userStore.fetchUserData();
 });
 </script>
 <template>
   <section class="container-home">
     <img src="@/assets/img/assets.png" class="imgAssets" />
     <div class="wrap-content">
-      <h1 class="title">{{ dataTest.test_name }}</h1>
-      <p class="parag">{{ dataTest.description }}</p>
+      <h1 class="title">Tes Pengetahuan Umum</h1>
+      <p class="parag">
+        Tes untuk mengukur pengetahuan umum tentang berbagai topik. Soal
+        merupakan pilihan ganda, pilihla jawaban yang menurut anda benar, lalu
+        klik selanjutnya. Anda bisa kembali ke Soal sebelumnya atau Lompat ke
+        soal berikutnya.
+      </p>
       <div class="wrap-icon">
         <p class="content-icon">
           <svg
