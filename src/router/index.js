@@ -20,13 +20,13 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ["participant"] },
     },
     {
-      path: "/test",
+      path: "/test/:id",
       name: "test",
       component: Test,
       meta: { requiresAuth: true, roles: ["participant"] },
     },
     {
-      path: "/result",
+      path: "/result/:id",
       name: "result",
       component: Result,
       meta: { requiresAuth: true, roles: ["participant"] },
@@ -84,7 +84,6 @@ router.beforeEach(async (to, from, next) => {
     const allowedRoles = to.meta.roles;
 
     if (allowedRoles && !allowedRoles.includes(userRole)) {
-      // Jika peran pengguna tidak diizinkan, redirect ke halaman 403 atau halaman lain
       return next("/notFound");
     }
   }

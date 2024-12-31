@@ -8,6 +8,7 @@ export const useUserStore = defineStore("user", {
       email: null,
       username: null,
       role: null,
+      test_attempt: null,
     },
     isLoggedIn: false,
   }),
@@ -25,6 +26,7 @@ export const useUserStore = defineStore("user", {
           this.userData.email = response.data.user.email;
           this.userData.username = response.data.user.username;
           this.userData.role = response.data.user.role;
+          this.userData.test_attempt = response.data.user.test_attempt;
           this.isLoggedIn = true;
         } else {
           throw new Error("Unauthorized");

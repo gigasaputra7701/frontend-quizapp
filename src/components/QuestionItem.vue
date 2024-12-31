@@ -1,5 +1,6 @@
 <script setup>
 import { ref, defineProps, defineEmits, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 defineProps({
   result: {
@@ -11,32 +12,55 @@ defineProps({
   },
 });
 
+const router = useRouter();
+const route = useRoute();
+const user_id = ref(route.params.id);
+
 const emit = defineEmits(["answer-change", "submit"]);
 const selectedOption = ref(null);
 
 const timer = ref("00:00:00");
-const totalSeconds = ref(5 * 60);
+const totalSeconds = ref(null);
 
 onMounted(() => {
+  const savedSeconds = localStorage.getItem("totalSeconds");
+  if (savedSeconds) {
+    totalSeconds.value = parseInt(savedSeconds, 10);
+  }
+
+  const savedTimer = localStorage.getItem("timer");
+  if (savedTimer) {
+    timer.value = savedTimer;
+  } else {
+    totalSeconds.value = 5 * 60;
+    updateTimerDisplay();
+  }
+
   const updateTimer = () => {
     if (totalSeconds.value > 0) {
       totalSeconds.value--;
-      const hours = String(Math.floor(totalSeconds.value / 3600)).padStart(
-        2,
-        "0"
-      );
-      const minutes = String(
-        Math.floor((totalSeconds.value % 3600) / 60)
-      ).padStart(2, "0");
-      const seconds = String(totalSeconds.value % 60).padStart(2, "0");
-      timer.value = `${hours}:${minutes}:${seconds}`;
+      updateTimerDisplay();
+
+      localStorage.setItem("totalSeconds", totalSeconds.value);
+      localStorage.setItem("timer", timer.value);
     } else {
       submitAnswers();
+      router.push(`/result/${user_id.value}`);
     }
   };
 
   setInterval(updateTimer, 1000);
 });
+
+const updateTimerDisplay = () => {
+  const hours = String(Math.floor(totalSeconds.value / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((totalSeconds.value % 3600) / 60)).padStart(
+    2,
+    "0"
+  );
+  const seconds = String(totalSeconds.value % 60).padStart(2, "0");
+  timer.value = `${hours}:${minutes}:${seconds}`;
+};
 
 const handleOptionChange = (questionId, option) => {
   selectedOption.value = option;
@@ -44,6 +68,8 @@ const handleOptionChange = (questionId, option) => {
 };
 
 const submitAnswers = () => {
+  localStorage.removeItem("totalSeconds");
+  localStorage.removeItem("timer");
   emit("submit");
 };
 </script>

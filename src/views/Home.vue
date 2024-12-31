@@ -1,25 +1,62 @@
 <script setup>
-import { RouterLink } from "vue-router";
-import { onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
+
+const router = useRouter();
 const userStore = useUserStore();
+const userData = computed(() => userStore.userData);
+
+const id = ref(userData.value._id);
+const test_attempt = ref(userData.value.test_attempt);
 
 onMounted(() => {
   userStore.fetchUserData();
 });
+
+const handleButtonClick = () => {
+  if (test_attempt.value < 1) {
+    router.push(`/result/${id.value}`);
+  } else {
+    router.push(`/test/${id.value}`);
+  }
+};
 </script>
 <template>
   <section class="container-home">
-    <img src="@/assets/img/assets.png" class="imgAssets" />
+    <img
+      v-if="test_attempt"
+      src="@/assets/img/assets.png"
+      class="imgAssets"
+      alt="assets-1"
+    />
+    <img
+      v-else
+      src="@/assets/img/assets-2.png"
+      class="imgAssets"
+      alt="assets-2"
+    />
     <div class="wrap-content">
-      <h1 class="title">Tes Pengetahuan Umum</h1>
+      <h1 class="title">
+        {{
+          test_attempt > 0
+            ? "Instruksi Pengerjaan"
+            : "Anda Telah Menyelesaikan Tes"
+        }}
+      </h1>
       <p class="parag">
-        Tes untuk mengukur pengetahuan umum tentang berbagai topik. Soal
+        {{
+          test_attempt > 0
+            ? `Tes untuk mengukur pengetahuan umum tentang berbagai topik. Soal
         merupakan pilihan ganda, pilihla jawaban yang menurut anda benar, lalu
         klik selanjutnya. Anda bisa kembali ke Soal sebelumnya atau Lompat ke
-        soal berikutnya.
+        soal berikutnya.`
+            : `Selamat! Anda telah menyelesaikan tes ini. Terima kasih telah berpartisipasi. 
+  Kami akan memproses hasil tes Anda dan memberikan umpan balik dalam waktu dekat.
+  Anda dapat melihat hasilnya di halaman berikutnya.`
+        }}
       </p>
-      <div class="wrap-icon">
+      <div class="wrap-icon" v-if="test_attempt">
         <p class="content-icon">
           <svg
             width="31"
@@ -50,11 +87,13 @@ onMounted(() => {
           Indikator Sinyal Terputus
         </p>
       </div>
-      <ul>
+      <ul v-if="test_attempt">
         <li class="bold">*Persiapakan diri dan Perangkat Anda</li>
         <li class="bold">*Test Hanya dapat dilakukan 1x</li>
       </ul>
-      <router-link class="button" to="/test">Mulai Test</router-link>
+      <button class="button" @click="handleButtonClick">
+        {{ test_attempt > 0 ? "Mulai Tes" : "Lihat Hasil" }}
+      </button>
     </div>
   </section>
 </template>
@@ -66,6 +105,7 @@ onMounted(() => {
   align-items: center;
   padding: 2rem 0rem 2rem 0rem;
   gap: 1rem;
+  max-width: 550px;
 }
 .imgAssets {
   width: 200px;

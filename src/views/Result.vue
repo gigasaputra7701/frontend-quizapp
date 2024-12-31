@@ -1,11 +1,29 @@
 <script setup>
-import { onMounted } from "vue";
-import { RouterLink } from "vue-router";
+import axios from "axios";
+import { ref, onMounted, computed } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
+
+const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 
-onMounted(() => {
+const userData = computed(() => userStore.userData);
+const idData = ref(userData.value._id);
+
+const id = ref(route.params.id);
+const result = ref("");
+
+onMounted(async () => {
   userStore.fetchUserData();
+  if (id.value === idData.value) {
+    const res2 = await axios.get(
+      `http://localhost:8000/api/result/${id.value}`
+    );
+    result.value = res2.data.resultTest;
+  } else {
+    router.push("/notFound");
+  }
 });
 </script>
 
@@ -13,13 +31,8 @@ onMounted(() => {
   <div class="container-result">
     <img src="../assets/img/assets-2.png" alt="" />
     <div class="wrap-content">
-      <h2>Congratulation</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, nam,
-        possimus nobis impedit deserunt, sequi porro dolor dicta odio suscipit
-        amet quis voluptas deleniti voluptate earum inventore recusandae quae
-        tenetur?
-      </p>
+      <h2>Hasil Tes Anda</h2>
+      <p class="parag">Skor: {{ result.score }}</p>
     </div>
 
     <button class="button">
@@ -43,15 +56,13 @@ img {
 }
 h2 {
   text-align: center;
-  color: #222222;
   font-size: 32px;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-p {
+.parag {
   font-size: 14px;
-  line-height: 1.2rem;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 button {
   width: 100%;
@@ -59,12 +70,12 @@ button {
 }
 @media (min-width: 768px) {
   .container-result {
-    width: 450px;
+    width: 350px;
   }
 }
 @media (min-width: 992px) {
   .container-result {
-    width: 600px;
+    width: 400px;
   }
 }
 </style>
