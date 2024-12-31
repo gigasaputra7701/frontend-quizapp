@@ -18,9 +18,11 @@ onMounted(async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/result", {
         headers: {
-          Authorization: localStorage.getItem("token"),
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Tambahkan "Bearer" di depan token
         },
       });
+
+      results.value = response.data.dataResult;
     } catch (error) {
       console.error("Error fetching results:", error);
     }
