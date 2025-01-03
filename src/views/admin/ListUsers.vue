@@ -38,6 +38,7 @@ onMounted(async () => {
           <th>Username</th>
           <th>Email</th>
           <th>Role</th>
+          <th>Test Status</th>
           <th>Tanggal Daftar</th>
         </tr>
       </thead>
@@ -46,6 +47,10 @@ onMounted(async () => {
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.role }}</td>
+          <td v-if="user.role === 'participant'">
+            {{ user.test_attempt > 0 ? "Belum Selesai" : "Selesai" }}
+          </td>
+          <td v-else>-</td>
           <td>{{ new Date(user.created_at).toLocaleString() }}</td>
         </tr>
       </tbody>

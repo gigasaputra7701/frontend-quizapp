@@ -37,7 +37,7 @@ onMounted(async () => {
   try {
     const res = await axios.get("http://localhost:8000/users");
     const dataUsers = res.data.users;
-    
+
     const filterId = dataUsers.map((user) => ({
       _id: user._id,
     }));
